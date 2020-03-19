@@ -1,0 +1,565 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="renderer" content="webkit" />
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+		
+		
+	
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+var Com_Parameter = {
+	ContextPath:"/",
+	ResPath:"/resource/",
+	Style:"default",
+	JsFileList:new Array,
+	StylePath:"/resource/style/default/",
+	Lang:"zh-cn",
+	CurrentUserId:"16cdb4c591b8bfc692701794b4c890dd",
+	Cache:1584095152664,
+	FirstDayInWeek: parseInt('1') - 1,
+	CalendarMinuteStep:parseInt('1'),
+	SessionExpireTip:"会话过期，请打开新页面重新登录后再提交本页面。",
+	ServiceNotAvailTip:"与服务器连接不通，请联系系统管理员或等会再试。",
+	Date_format:"yyyy-MM-dd",
+	DateTime_format:"yyyy-MM-dd HH:mm",
+	SoftDeleteEnableModules:"",
+	ComfirmDelete:"一旦选择了删除，所选记录的相关数据都会被删除，无法恢复！您确认要执行此删除操作吗？",
+	ComfirmSoftDelete:"您确定要将所选记录放入回收站吗？<br>",
+	OptSuccessInfo:"您的操作已成功！",
+	OptFailureInfo:"操作失败！",
+	clientType:"-1"
+};
+</script>
+<script type="text/javascript" src='/resource/js/domain.js?s_cache=1584095152664'></script>
+<script type="text/javascript" src='/sys/ui/js/LUI.js?s_cache=1584095152664'></script>
+<script type="text/javascript" src="/resource/js/common.js?s_cache=1584095152664"></script>
+<script type="text/javascript" src="/resource/js/sea.js?s_cache=1584095152664"></script>
+
+<script type="text/javascript">
+seajs.config({
+	themes : {
+    "icon": ["ui-ext/green_estate/style/icon.theme.css?theme=green_estate&key=icon"],
+    "iconfont": ["ui-ext/green_estate/style/iconfont.theme.css?theme=green_estate&key=iconfont"],
+    "module": ["ui-ext/green_estate/style/module.theme.css?theme=green_estate&key=module"],
+    "form": ["ui-ext/green_estate/style/form.theme.css?theme=green_estate&key=form"],
+    "common": ["ui-ext/green_estate/style/common.theme.css?theme=green_estate&key=common"],
+    "portal": ["ui-ext/green_estate/style/portal.theme.css?theme=green_estate&key=portal"],
+    "listview": ["ui-ext/green_estate/style/listview.theme.css?theme=green_estate&key=listview"],
+    "sns": ["ui-ext/green_estate/style/sns.theme.css?theme=green_estate&key=sns"],
+    "chart": ["ui-ext/green_estate/style/chart.theme.css?theme=green_estate&key=chart"],
+    "treefont": ["ui-ext/green_estate/style/treefont.theme.css?theme=green_estate&key=treefont"],
+    "dialog": ["ui-ext/green_estate/style/dialog.theme.css?theme=green_estate&key=dialog"],
+    "widget": ["ui-ext/green_estate/style/widget.theme.css?theme=green_estate&key=widget"],
+    "step": ["ui-ext/green_estate/style/step.theme.css?theme=green_estate&key=step"],
+    "zone": ["ui-ext/green_estate/style/zone.theme.css?theme=green_estate&key=zone"],
+    "profile": ["ui-ext/green_estate/style/profile.theme.css?theme=green_estate&key=profile"],
+    "calendar": ["ui-ext/green_estate/style/calendar.theme.css?theme=green_estate&key=calendar"],
+    "prompt": ["ui-ext/green_estate/style/listview.theme.css?theme=green_estate&key=listview"]
+},
+	paths: {
+		'lui': 'sys/ui/js'
+	},
+	alias: {
+		'lui/jquery': 'resource/js/jquery',
+		'lui/jquery-ui': 'resource/js/jquery-ui/jquery.ui'
+	},
+	preload: ['/resource/js/plugin-theme.js','/resource/js/plugin-lang.js'],
+	debug: true,
+ 	base: '',
+ 	env : {
+ 	 	contextPath: '',
+ 		now : '2020-03-19 12:12',
+ 		pageMaxWidth:'1920px',
+ 		pattern : {
+ 			date : 'yyyy-MM-dd',
+ 			datetime : 'yyyy-MM-dd HH:mm',
+ 			time : 'HH:mm'
+ 		},
+ 		locale : "zh-cn",
+ 		config : {},
+ 		cache : 1584095152664
+ 	}
+});
+seajs.use([ 'lui/parser', 'lui/jquery', 'lui/dialog', 'theme!common', 'theme!icon','theme!iconfont' ],
+	function(parser, $) {
+		window.dingTalkEvent = function(){
+			var clientType = Com_Parameter.clientType;
+			if(clientType=='-3'){
+				Com_AddEventListener(document, "click", function(){
+					var eventObj = Com_GetEventObject();
+					var eleObj = eventObj.srcElement || eventObj.target;
+					var tagName = eleObj.tagName;
+					if(tagName.toLowerCase()=='a'){
+						var target = $(eleObj).attr('target');
+						var href = $(eleObj).attr('href');
+						if(target=='_blank' && href && href.indexOf('javacript')==-1){
+							$(eleObj).attr('href',Com_SetUrlParameter(href,'ddtab',true));
+						}
+					}
+					return true;
+				});
+			
+				var curl = window.location.href;
+				// 如果打开的是流程预览页面
+				if(window.hasReviewButtons()){
+					// 以起草人身份操作处理
+					$("#drafterOptButton").attr("onclick","").off("click").on("click",function(){
+						showTipWindow(curl);
+					});     
+					
+					// 以特权人身份操作
+					$("#authorityOptButton").attr("onclick","").off("click").on("click",function(){
+						showTipWindow(curl);
+					});
+				}
+				
+				// 后台管理
+				$(".lui_list_left_sidebar_td div").each(function(i,n){
+					var item = $(n).html();
+					if($(n).attr("data-lui-type")=="lui/data/source!Static" && item.indexOf("lui_iconfont_navleft_com_background")>=0){
+						console.log("item=>"+item);
+						// /javascript:LUI.pageOpen\(\'\/.*sys\/profile.*?_blank\'\);/
+						// var rgx = "javascript:LUI.pageOpen('/ekp/sys/profile/index.jsp#app/ekp/km/review','_blank');";
+						var replaceText = "javascript:showTipWindow('"+curl+"');";
+						// console.log(item.replace(/javascript:LUI.pageOpen\(\'\/.*sys\/profile.*?[_blank|_rIframe]\'\);/,replaceText));
+						$(n).html(item.replace(/javascript:LUI.pageOpen\(\'\/.*sys\/profile.*?[_blank|_rIframe]\'\);/,replaceText));
+					}
+				});
+			}
+		};
+		
+		// 检测流程审批以起草人处理、以特权人处理点击
+		window.hasReviewButtons = function(){
+			var flag = false;
+			var curl = window.location.href;
+			// 流程预览页面 
+		    if($("#drafterOptButton").length > 0 || $("#authorityOptButton").length > 0){
+		    	flag = true;
+		    }
+			return flag;
+		}
+		
+		// 打开弹框提示在外部打开
+		window.showTipWindow = function (url){
+			// 添加用户token
+			var outToken = "MTZjZGI0YzU5MWI4YmZjNjkyNzAxNzk0YjRjODkwZGQ=";
+			// 必须编码，防止#导致参数无法接收
+			url = url.replace(/#/g,"%23");
+			if(url.indexOf("?")>=0){
+				url+="&outToken="+outToken;	
+			}else{
+				url+="?outToken="+outToken;	
+			}
+			
+			var innerHTML = "<div class='model'>"                   +
+							"	<div class='model-header'>"         +
+							"		<span class='close'>×</span>"   + 
+							"	</div>"                             +
+							"<div class='model-body no-support-msg'>"              +
+							"	<div class='pic'><img src='"+Com_Parameter.ContextPath+"resource/images/no_support_ding.png?s_cache=1584095152664'/></div>"                    +
+							"	<div class='msg'>暂不支持在钉钉PC端内打开，如有需要，请打开到外部浏览器。</div>"+
+							"	<div class='btn'>打开到外部浏览器</div>"                    +
+							"</div>"                                +
+							"<div class='model-footer'></div>"      +
+							"</div>"                                +
+							"<div class='mask'></div>";
+			// 防止弹出层重复添加
+			if(typeof $(".model").html() == "undefined"){
+				$("body").append(innerHTML);
+				// 打开事件
+				$(".no-support-msg .btn").on("click",function(){
+					window.open(url,'_blank');
+				});
+			}
+			
+			// 展示弹窗
+			showModel();
+
+			function showModel(){
+				// 模态窗里面必须是在外部打开
+				try{
+					window.open = function(url,target,specs,replace){
+						if(target && target=='_blank' && url){
+							url = Com_SetUrlParameter(url);
+						}
+						var win = window.Com_openWin(url,target,specs,replace);
+						return win;
+					};
+				}catch(e){
+					alert(e);
+				}
+				
+				var wW=$(window).width();  //浏览器可视区域宽度和高度
+				var wH=$(window).height();
+				var oW=$(".model").innerWidth(); //获取类叫model的宽度和高度
+				var oH=$(".model").innerHeight();
+				$(".model").show().css({"top":(wH-oH)/2+"px","left":(wW-oW)/2+"px"});
+				$(".mask").fadeIn();
+			}
+			$(window).resize(function(){
+				if($(".model").is(":visible")){ //弹出框必须可见后 才能调用showModel()
+					showModel();
+				}
+			});
+			$(".close").click(function(){
+				// 关闭模态窗之后恢复钉钉打开窗口方式
+				try{
+					window.open = function(url,target,specs,replace){
+						if(target && target=='_blank' && url){
+							url = Com_SetUrlParameter(url, "ddtab","true");
+						}
+						var win = window.Com_openWin(url,target,specs,replace);
+						return win;
+					};
+				}catch(e){
+					console.log(e);
+				}
+				
+				$(".mask").fadeOut();
+				$(".model").hide();
+			});
+			$(document).keydown(function(ev){
+				if(ev.keyCode==27){  //当按下键盘Esc时===》close关闭按钮
+//					$(".model").hide();
+//					$(".mask").fadeOut();
+					$(".close").trigger("click");//trigger("事件名")  模拟事件
+				}
+			})
+		};
+		
+		$(document).ready(function() {
+			parser.parse();
+			dingTalkEvent();
+		});
+	}); 
+</script>
+
+
+<link rel="shortcut icon" href="/resource/customization/images/login_single_random/favicon.ico">
+
+<script src="/sys/ui/extend/template/module/simple.js?s_cache=1584095152664"></script>
+
+		<style>iframe{border:0;}</style>
+		
+		<script type="text/javascript">
+			var menuDatas = eval('([{"text":"概览","url":"org/overview","pinYin":"gailan"},{"text":"基础设置","url":"org/baseSetting","pinYin":"jichushezhi"},{"text":"组织架构","url":"org/organizational","pinYin":"zuzhijiagou"},{"text":"权限管理","url":"org/authority","pinYin":"quanxianguanli"},{"text":"工作交接","url":"org/handover","pinYin":"gongzuojiaojie"},{"text":"门户维护","url":"portal/maintenance","pinYin":"menhuweihu"},{"text":"门户主题","url":"portal/ext","pinYin":"menhuzhuti"},{"text":"门户部件","url":"portal/element","pinYin":"menhubujian"},{"text":"素材库","url":"portal/material","pinYin":"sucaiku"},{"text":"个人设置","url":"portal/setting","pinYin":"gerenshezhi"},{"text":"流程引擎服务","url":"lbpm/workflow","pinYin":"liuchengyinqingfuwu"},{"text":"表单管理","url":"lbpm/form","pinYin":"biaodanguanli"},{"text":"流程监控中心","url":"lbpm/monitor","pinYin":"liuchengjiankongzhongxin"},{"text":"排班管理","url":"lbpm/timeArea","pinYin":"paibanguanli"},{"text":"流程分析平台","url":"lbpm/analysis","pinYin":"liuchengfenxipingtai"},{"text":"流程集成服务","url":"lbpm/services","pinYin":"liuchengjichengfuwu"},{"text":"流程授权","url":"lbpm/authorize","pinYin":"liuchengshouquan"},{"text":"流程仿真","url":"lbpm/simulation","pinYin":"liuchengfangzhen"},{"text":"投票加权","url":"lbpm/voteweight","pinYin":"toupiaojiaquan"},{"text":"规则引擎","url":"lbpm/sys/lbpmext/rule","pinYin":"guizeyinqing"},{"text":"搜索配置","url":"ftsearch/sc","pinYin":"sousuopeizhi"},{"text":"词库管理","url":"ftsearch/wm","pinYin":"cikuguanli"},{"text":"搜索日志","url":"ftsearch/sl","pinYin":"sousuorizhi"},{"text":"统计分析","url":"ftsearch/sa","pinYin":"tongjifenxi"},{"text":"待办","url":"notify/notify","pinYin":"daiban"},{"text":"短信 ","url":"notify/sms","pinYin":"duanxin "},{"text":"邮件","url":"notify/mailConfig","pinYin":"youjian"},{"text":"消息队列出错信息","url":"notify/queue","pinYin":"xiaoxiduiliechucuoxinxi"},{"text":"协同","url":"app/ekp","pinYin":"xietong"},{"text":"demo注册优化","url":"app/ekp/nc/customer","pinYin":"demozhuceyouhua"},{"text":"流程管理","url":"app/ekp/km/review","pinYin":"liuchengguanli"},{"text":"公文管理政务版","url":"app/ekp/km/imissive","pinYin":"gongwenguanlizhengwuban"},{"text":"会议管理","url":"app/ekp/km/imeeting","pinYin":"huiyiguanli"},{"text":"任务管理","url":"app/ekp/sys/task","pinYin":"renwuguanli"},{"text":"时间管理","url":"app/ekp/km/calendar","pinYin":"shijianguanli"},{"text":"知识中心","url":"app/ekp/km/doc","pinYin":"zhishizhongxin"},{"text":"新闻管理","url":"app/ekp/sys/news","pinYin":"xinwenguanli"},{"text":"规范制度","url":"app/ekp/km/institution","pinYin":"guifanzhidu"},{"text":"工作沟通","url":"app/ekp/km/collaborate","pinYin":"gongzuogoutong"},{"text":"论坛管理","url":"app/ekp/km/forum","pinYin":"luntanguanli"},{"text":"办公用品管理","url":"app/ekp/km/oitems","pinYin":"bangongyongpinguanli"},{"text":"常用资料","url":"app/ekp/km/comminfo","pinYin":"changyongziliao"},{"text":"车辆管理","url":"app/ekp/km/carmng","pinYin":"cheliangguanli"},{"text":"档案管理","url":"app/ekp/km/archives","pinYin":"danganguanli"},{"text":"督办管理","url":"app/ekp/km/supervise","pinYin":"dubanguanli"},{"text":"工作总结","url":"app/ekp/km/summary","pinYin":"gongzuozongjie"},{"text":"公文管理","url":"app/ekp/km/smissive","pinYin":"gongwenguanli"},{"text":"供应商管理","url":"app/ekp/km/provider","pinYin":"gongyingshangguanli"},{"text":"关键数据管理","url":"app/ekp/km/keydata","pinYin":"guanjianshujuguanli"},{"text":"管理驾驶舱","url":"app/ekp/dbcenter/meterview","pinYin":"guanlijiashicang"},{"text":"合同管理","url":"app/ekp/km/contract","pinYin":"hetongguanli"},{"text":"客户台账管理","url":"app/ekp/km/cusledger","pinYin":"kehutaizhangguanli"},{"text":"签章管理","url":"app/ekp/km/signature","pinYin":"qianzhangguanli"},{"text":"调查管理","url":"app/ekp/km/pindagate","pinYin":"diaochaguanli"},{"text":"投票管理","url":"app/ekp/km/vote","pinYin":"toupiaoguanli"},{"text":"图书管理","url":"app/ekp/km/books","pinYin":"tushuguanli"},{"text":"项目工作室","url":"app/ekp/km/coproject","pinYin":"xiangmugongzuoshi"},{"text":"业务活动管理","url":"app/ekp/km/bam2","pinYin":"yewuhuodongguanli"},{"text":"员工活动","url":"app/ekp/km/empactivity","pinYin":"yuangonghuodong"},{"text":"证照管理","url":"app/ekp/km/certificate","pinYin":"zhengzhaoguanli"},{"text":"资产管理","url":"app/ekp/km/asset","pinYin":"zichanguanli"},{"text":"资源借用","url":"app/ekp/km/resource","pinYin":"ziyuanjieyong"},{"text":"EKP应用日志库","url":"app/ekp/sys/auditlog","pinYin":"ekpyingyongrizhiku"},{"text":"RSS频道管理","url":"app/ekp/sys/rss","pinYin":"rsspindaoguanli"},{"text":"demo运营数据分析","url":"app/ekp/demo/analyse","pinYin":"demoyunyingshujufenxi"},{"text":"demo垃圾数据清理","url":"app/ekp/demo/deleteDate","pinYin":"demolajishujuqingli"},{"text":"提案建议","url":"app/ekp/km/proposal","pinYin":"tianjianyi"},{"text":"内部邮件","url":"app/ekp/sys/email","pinYin":"neibuyoujian"},{"text":"人事","url":"app/hr","pinYin":"renshi"},{"text":"排班管理","url":"app/hr/sys/time","pinYin":"paibanguanli"},{"text":"招聘管理","url":"app/hr/hr/recruit","pinYin":"zhaopinguanli"},{"text":"签到服务","url":"app/hr/sys/attend","pinYin":"qiandaofuwu"},{"text":"人事档案","url":"app/hr/hr/staff","pinYin":"renshidangan"},{"text":"绩效考核","url":"app/hr/hr/okr","pinYin":"jixiaokaohe"},{"text":"人事流程","url":"app/hr/hr/ratify","pinYin":"renshiliucheng"},{"text":"合同","url":"app/agreement","pinYin":"hetong"},{"text":"合同管理","url":"app/agreement/km/agreement","pinYin":"hetongguanli"},{"text":"结算管理","url":"app/agreement/km/settlement","pinYin":"jiesuanguanli"},{"text":"法务管理","url":"app/agreement/km/affairs","pinYin":"fawuguanli"},{"text":"相对方管理","url":"app/agreement/km/relative","pinYin":"xiangduifangguanli"},{"text":"印控中心","url":"app/sealcenter","pinYin":"yinkongzhongxin"},{"text":"统一印章管理","url":"app/sealcenter/elec/seal","pinYin":"tongyiyinzhangguanli"},{"text":"学习","url":"app/learn","pinYin":"xuexi"},{"text":"学习地图","url":"app/learn/kms/lmap","pinYin":"xuexiditu"},{"text":"直播管理","url":"app/learn/third/live/polyv","pinYin":"zhiboguanli"},{"text":"学习管理","url":"app/learn/kms/learn","pinYin":"xuexiguanli"},{"text":"培训管理","url":"app/learn/kms/train","pinYin":"peixunguanli"},{"text":"考试管理","url":"app/learn/kms/exam","pinYin":"kaoshiguanli"},{"text":"讲师管理","url":"app/learn/kms/lecturer","pinYin":"jiangshiguanli"},{"text":"证书管理","url":"app/learn/kms/diploma","pinYin":"zhengshuguanli"},{"text":"学分管理","url":"app/learn/kms/credit","pinYin":"xuefenguanli"},{"text":"作业管理","url":"app/learn/kms/homework","pinYin":"zuoyeguanli"},{"text":"每日提醒","url":"app/learn/kms/reminder","pinYin":"meiritixing"},{"text":"微课工具","url":"app/learn/third/mishu","pinYin":"weikegongju"},{"text":"学习服务","url":"app/learn/kms/lservice","pinYin":"xuexifuwu"},{"text":"学习运营","url":"app/learn/kms/loperation","pinYin":"xuexiyunying"},{"text":"培训班","url":"app/learn/kms/tcourse","pinYin":"peixunban"},{"text":"知识","url":"app/kms","pinYin":"zhishi"},{"text":"知识仓库","url":"app/kms/kms/knowledge","pinYin":"zhishicangku"},{"text":"原子知识管理","url":"app/kms/kms/kem","pinYin":"yuanzizhishiguanli"},{"text":"知识地图","url":"app/kms/kms/kmaps","pinYin":"zhishiditu"},{"text":"知识专辑","url":"app/kms/kms/kmtopic","pinYin":"zhishizhuanji"},{"text":"知识问答","url":"app/kms/kms/ask","pinYin":"zhishiwenda"},{"text":"社会化知识库","url":"app/kms/kms/socialdoc","pinYin":"shehuihuazhishiku"},{"text":"专家网络","url":"app/kms/kms/expert","pinYin":"zhuanjiawangluo"},{"text":"知识评测","url":"app/kms/kms/evaluate","pinYin":"zhishipingce"},{"text":"积分管理","url":"app/kms/kms/integral","pinYin":"jifenguanli"},{"text":"积分商城","url":"app/kms/kms/imall","pinYin":"jifenshangcheng"},{"text":"KMS日志库","url":"app/kms/kms/log","pinYin":"kmsrizhiku"},{"text":"勋章管理","url":"app/kms/kms/medal","pinYin":"xunzhangguanli"},{"text":"员工黄页","url":"app/kms/sys/zone","pinYin":"yuangonghuangye"},{"text":"知识服务","url":"app/kms/kms/kmservice","pinYin":"zhishifuwu"},{"text":"知识组件","url":"app/kms/kms/common","pinYin":"zhishizujian"},{"text":"云问机器人集成组件","url":"app/kms/third/kemyw","pinYin":"yunwenjiqirenjichengzujian"},{"text":"问题库","url":"app/kms/third/kemyw","pinYin":"wentiku"},{"text":"知识分类","url":"app/kms/kms/category","pinYin":"zhishifenlei"},{"text":"协同写作","url":"app/kms/kms/cowriting","pinYin":"xietongxiezuo"},{"text":"知识入库引擎","url":"app/kms/kms/istorage","pinYin":"zhishirukuyinqing"},{"text":"社区","url":"app/sns","pinYin":"shequ"},{"text":"图册","url":"app/sns/sns/album","pinYin":"tuce"},{"text":"活动","url":"app/sns/sns/event","pinYin":"huodong"},{"text":"圈子","url":"app/sns/sns/group","pinYin":"quanzi"},{"text":"个人社区","url":"app/sns/sns/ispace","pinYin":"gerenshequ"},{"text":"话题","url":"app/sns/sns/topic","pinYin":"huati"},{"text":"投票","url":"app/sns/sns/vote","pinYin":"toupiao"},{"text":"费控","url":"app/fs","pinYin":"feikong"},{"text":"携程组件","url":"app/fs/fssc/ctrip","pinYin":"xiechengzujian"},{"text":"阿里商旅组件","url":"app/fs/fssc/alitrip","pinYin":"alishanglvzujian"},{"text":"合力中税组件","url":"app/fs/fssc/baiwang","pinYin":"helizhongshuizujian"},{"text":"财务基础档案","url":"app/fs/fssc/base","pinYin":"caiwujichudangan"},{"text":"预算管理","url":"app/fs/fssc/budget","pinYin":"yusuanguanli"},{"text":"预算编制","url":"app/fs/fssc/budgeting","pinYin":"yusuanbianzhi"},{"text":"出纳工作台","url":"app/fs/fssc/cashier","pinYin":"chunagongzuotai"},{"text":"招行组件","url":"app/fs/fssc/cmb","pinYin":"zhaoxingzujian"},{"text":"EAS凭证集成","url":"app/fs/fssc/eas","pinYin":"easpingzhengjicheng"},{"text":"报销","url":"app/fs/fssc/expense","pinYin":"baoxiao"},{"text":"事前申请","url":"app/fs/fssc/fee","pinYin":"shiqianshenqing"},{"text":"台账管理","url":"app/fs/fssc/ledger","pinYin":"taizhangguanli"},{"text":"借款","url":"app/fs/fssc/loan","pinYin":"jiekuan"},{"text":"移快报","url":"app/fs/fssc/mobile","pinYin":"yikuaibao"},{"text":"OCR识别","url":"app/fs/fssc/ocr","pinYin":"ocrshibie"},{"text":"付款管理","url":"app/fs/fssc/payment","pinYin":"fukuanguanli"},{"text":"采购管理","url":"app/fs/fssc/purch","pinYin":"caigouguanli"},{"text":"信影像组件","url":"app/fs/fssc/siit","pinYin":"xinyingxiangzujian"},{"text":"供应商管理","url":"app/fs/fssc/supplier","pinYin":"gongyingshangguanli"},{"text":"凭证中心","url":"app/fs/fssc/voucher","pinYin":"pingzhengzhongxin"},{"text":"机制","url":"app/mechanism","pinYin":"jizhi"},{"text":"锁机制","url":"app/mechanism/locker","pinYin":"suojizhi"},{"text":"智能推荐","url":"app/mechanism/ipush","pinYin":"zhinengtuijian"},{"text":"附件机制","url":"app/mechanism/sys/attachment","pinYin":"fujianjizhi"},{"text":"个人收藏夹","url":"app/mechanism/bookmark","pinYin":"gerenshouzangjia"},{"text":"全局分类","url":"app/mechanism/category","pinYin":"quanjufenlei"},{"text":"点评管理","url":"app/mechanism/evaluation","pinYin":"dianpingguanli"},{"text":"订阅管理","url":"app/mechanism/follow","pinYin":"dingyueguanli"},{"text":"帮助中心","url":"app/mechanism/sys/help","pinYin":"bangzhuzhongxin"},{"text":"编号机制","url":"app/mechanism/number","pinYin":"bianhaojizhi"},{"text":"赞赏管理","url":"app/mechanism/praise","pinYin":"zanshangguanli"},{"text":"语言包前端配置工具","url":"app/mechanism/langtools","pinYin":"yuyanbaoqianduanpeizhigongju"},{"text":"属性中心","url":"app/mechanism/property","pinYin":"shuxingzhongxin"},{"text":"回收站","url":"app/mechanism/recycle","pinYin":"huishouzhan"},{"text":"关联机制","url":"app/mechanism/relation","pinYin":"guanlianjizhi"},{"text":"规则引擎","url":"app/mechanism/sys/rule","pinYin":"guizeyinqing"},{"text":"下属工作","url":"app/mechanism/subordinate","pinYin":"xiashugongzuo"},{"text":"标签管理","url":"app/mechanism/tag","pinYin":"biaoqianguanli"},{"text":"单位管理","url":"app/mechanism/sys/unit","pinYin":"danweiguanli"},{"text":"移动应用管理","url":"mobile/component","pinYin":"yidongyingyongguanli"},{"text":"移动门户","url":"mobile/portal","pinYin":"yidongmenhu"},{"text":"KK入口","url":"mobile/kk","pinYin":"kkrukou"},{"text":"微信企业号入口","url":"mobile/weixin","pinYin":"weixinqiyehaorukou"},{"text":"企业微信入口","url":"mobile/wxwork","pinYin":"qiyeweixinrukou"},{"text":"微信公众号入口","url":"mobile/wechat","pinYin":"weixingongzhonghaorukou"},{"text":"钉钉入口","url":"mobile/dingding","pinYin":"dingdingrukou"},{"text":"蓝钉集成","url":"mobile/third/lding","pinYin":"landingjicheng"},{"text":"概览","url":"integrate/overview","pinYin":"gailan"},{"text":"报表集成","url":"integrate/report","pinYin":"baobiaojicheng"},{"text":"图表中心","url":"integrate/report/dbcenter/echarts","pinYin":"tubiaozhongxin"},{"text":"帆软报表集成","url":"integrate/report/dbcenter/finereport","pinYin":"fanruanbaobiaojicheng"},{"text":"SmartBi报表集成","url":"integrate/report/dbcenter/smartbi","pinYin":"smartbibaobiaojicheng"},{"text":"报表中心","url":"integrate/report/dbcenter/report","pinYin":"baobiaozhongxin"},{"text":"奥威BI报表集成","url":"integrate/report/ourwaybi","pinYin":"aoweibibaobiaojicheng"},{"text":"邮件集成","url":"integrate/mail","pinYin":"youjianjicheng"},{"text":"Exchange集成","url":"integrate/mail/exchange","pinYin":"exchangejicheng"},{"text":"阿里企业邮箱集成","url":"integrate/mail/alimail","pinYin":"aliqiyeyouxiangjicheng"},{"text":"Coremail集成","url":"integrate/mail//coremail","pinYin":"coremailjicheng"},{"text":"Winmail集成","url":"integrate/mail/winmail","pinYin":"winmailjicheng"},{"text":"网易企业邮箱集成","url":"integrate/mail/qiye163","pinYin":"wangyiqiyeyouxiangjicheng"},{"text":"腾讯企业邮箱集成","url":"integrate/mail/qqexmail","pinYin":"tengxunqiyeyouxiangjicheng"},{"text":"ThinkMail集成","url":"integrate/mail/thinkmail","pinYin":"thinkmailjicheng"},{"text":"Saas云服务","url":"integrate/saas","pinYin":"saasyunfuwu"},{"text":"悦工作集成","url":"integrate/saas/ywork","pinYin":"yuegongzuojicheng"},{"text":"统一用户管理","url":"integrate/user","pinYin":"tongyiyonghuguanli"},{"text":"组织架构同步","url":"integrate/user/oms","pinYin":"zuzhijiagoutongbu"},{"text":"组织架构接入-JDBC","url":"integrate/user/oms_jdbc","pinYin":"zuzhijiagoujieru-jdbc"},{"text":"LDAP集成","url":"integrate/user/ldap","pinYin":"ldapjicheng"},{"text":"EKP-Domino集成","url":"integrate/user/domino","pinYin":"ekp-dominojicheng"},{"text":"EKP-JAVA集成","url":"integrate/user/java","pinYin":"ekp-javajicheng"},{"text":"EKP-MKPAAS集成","url":"integrate/user/mkpaas","pinYin":"ekp-mkpaasjicheng"},{"text":"IDM集成","url":"integrate/user/idm","pinYin":"idmjicheng"},{"text":"第三方集成总线","url":"integrate/tib","pinYin":"disanfangjichengzongxian"},{"text":"第三方集成中心","url":"integrate/tic","pinYin":"disanfangjichengzhongxin"},{"text":"其它应用集成","url":"integrate/other","pinYin":"qitayingyongjicheng"},{"text":"携程商旅集成","url":"integrate/other/ctrip","pinYin":"xiechengshanglvjicheng"},{"text":"铂恩集成","url":"integrate/other//meeting","pinYin":"boenjicheng"},{"text":"谷歌日历集成","url":"integrate/other/gcalendar","pinYin":"gugerilijicheng"},{"text":"印象笔记集成","url":"integrate/other/evernote","pinYin":"yinxiangbijijicheng"},{"text":"RTX集成","url":"integrate/other/rtx","pinYin":"rtxjicheng"},{"text":"Restservice服务","url":"integrate/RestService","pinYin":"restservicefuwu"},{"text":"电子合同集成","url":"integrate/eContract","pinYin":"dianzihetongjicheng"},{"text":"Webservice服务","url":"integrate/webservice2","pinYin":"webservicefuwu"},{"text":"数据源","url":"integrate/dbop","pinYin":"shujuyuan"},{"text":"概览","url":"maintenance/overview","pinYin":"gailan"},{"text":"管理员工具箱","url":"maintenance/admin","pinYin":"guanliyuangongjuxiang"},{"text":"多服务器配置","url":"maintenance/server","pinYin":"duofuwuqipeizhi"},{"text":"安全管控","url":"maintenance/security","pinYin":"anquanguankong"},{"text":"附件转换","url":"maintenance/file","pinYin":"fujianzhuanhuan"},{"text":"定时任务","url":"maintenance/timing","pinYin":"dingshirenwu"},{"text":"迁移工具","url":"maintenance/transfer","pinYin":"qianyigongju"},{"text":"WF-LBPM数据迁移工具","url":"maintenance/transfer/tools/lbpmtransfer","pinYin":"wf-lbpmshujuqianyigongju"},{"text":"D-J数据迁移工具","url":"maintenance/transfer/tools/datatransfer","pinYin":"d-jshujuqianyigongju"},{"text":"数据备份工具","url":"maintenance/transfer/tools/databackup","pinYin":"shujubeifengongju"},{"text":"使用分析","url":"maintenance/action","pinYin":"shiyongfenxi"},{"text":"日志管理","url":"maintenance/log","pinYin":"rizhiguanli"},{"text":"数据中台","url":"intelligence/maindata","pinYin":"shujuzhongtai"},{"text":"智能助手","url":"intelligence/intell","pinYin":"zhinengzhushou"},{"text":"群协作","url":"intelligence/cogroup","pinYin":"qunxiezuo"}])');
+			var searchNodataMsg = "很抱歉，没有找到相关的菜单。";
+		</script>
+		
+	
+<title>
+		后台配置中心
+	</title>
+</head>
+
+<body class=" ">
+	
+  
+		<!-- 后台配置中心 -->
+		<div id="sysProfileView" data-lui-type="sys/profile/resource/js/widget/base!View" style="display:none;">	
+
+		<!-- 顶部主导航栏 -->
+			<div class="lui_profile_header">
+			<div class="lui_profile_header_frame">
+				<div class="lui_porfile_header_content clearfloat">
+					<!-- LOGO -->
+					<div class="lui_porfile_header_logo">
+						<div class="lui_porfile_header_logo_div">
+							<img class="lui_porfile_header_logo_img" src="/sys/profile/resource/images/logo.png"
+								onclick="window.open('/','_self')" title="返回首页">
+						</div>
+					</div>
+					<!-- 标题 -->
+					<div class="lui_porfile_header_title">后台配置</div>
+					<!-- 个人信息 -->
+					<div class="lui_portal_header_userinfo">
+						
+
+
+
+
+
+
+
+
+
+
+<div data-lui-switch-class="lui_profile_userinfo_over" class="lui_profile_userinfo" >
+	<span class="lui_profile_userinfo_img">
+	
+		<img src='/sys/person/image.jsp?personId=16cdb4c591b8bfc692701794b4c890dd&size=null&s_time=1568973296000'/>
+	
+	</span>
+	
+	<p class="lui_profile_userinfo_name"  title="谢俞腾">谢俞腾</p>
+	<script>
+	seajs.use(['lui/jquery','lui/dialog'],function($,dialog){
+		window.__sys_logout = function(){
+			dialog.confirm("该操作将退出系统，是否继续？",function(value){
+				if(value){
+					location.href='/logout.jsp';
+				}				
+			});
+		};
+	});
+	</script>
+	<div data-lui-type="lui/popup!Popup" style="display:none;">	
+<script type="text/config">
+{
+    "borderWidth": -1,
+    "align": "down-right",
+    "style": "border:0!important;"
+}
+</script>
+
+		
+		<div class="lui_profile_userinfo_popup">
+		
+			<div class="lui_profile_userinfo_header">
+				<div class="lui_profile_userinfo_img">
+				
+					<img src='/sys/person/image.jsp?personId=16cdb4c591b8bfc692701794b4c890dd&size=null&s_time=1568973296000'/>
+				
+				</div>
+				<h4 class="lui_profile_userinfo_headername" title="谢俞腾">
+					谢俞腾
+					
+				</h4>
+				
+				<p class="lui_profile_userinfo_headerdept">行政服务部</p>
+				
+			</div>
+			<div class="lui_profile_userinfo_content">
+				
+				<div class="lui_profile_userinfo_link">
+					<ul>
+						<li>
+						<a href="/sys/follow/sys_follow_person_doc_related/sysFollowPersonDocRelated_person.jsp" target="_blank">
+							<i class="lui_profile_userinfo_icon lui_icon_s_profile_userinfo_rss"></i>
+							<p class="lui_profile_userinfo_link_text">订阅</p>
+						</a>
+						</li>
+						<li>
+						<a href="/sys/person/setting.do?setting=sys_bookmark_person_cfg" target="_blank">
+							<i class="lui_profile_userinfo_icon lui_icon_s_profile_userinfo_collect"></i>
+							<p class="lui_profile_userinfo_link_text">收藏</p>
+						</a>
+						</li>
+						<li>
+						<a href="/sys/zone/index.do?userid=16cdb4c591b8bfc692701794b4c890dd" target="_blank">
+							<i class="lui_profile_userinfo_icon lui_icon_s_profile_userinfo_zone"></i>
+							<p class="lui_profile_userinfo_link_text">空间</p>
+						</a>
+						</li>
+					</ul>
+				</div>
+				
+				<div class="lui_profile_userinfo_btnGroup">
+					
+					<div class="lui_profile_userinfo_btn userinfo_setting" onclick="window.open('/sys/person','_blank')">设置</div>
+					
+					<div class="lui_profile_userinfo_btn userinfo_quit" onclick="__sys_logout();">退出系统</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+					</div>
+					
+					<!-- 后台配置定位 -->
+					<div class="lui_portal_header_location">
+						<i class="lui_icon_m lui_icon_m_profile_navTop_location"></i>
+					</div>
+					
+					<!-- 顶部导航栏组件 -->
+					<div class="lui_profile_header_navTop">
+						<div id="sysProfileNavTop" data-lui-type="sys/profile/resource/js/widget/navTop!NavTop" style="display:none;">	
+
+							<div data-lui-type="lui/data/source!Static" style="display:none;">	
+<script type='text/code'>
+[{"key":"system","icon":"lui_icon_m_profile_navTop_system","title":"系统概览"},{"key":"org","icon":"lui_icon_m_profile_navTop_org","title":"组织权限管理"},{"key":"app","icon":"lui_icon_m_profile_navTop_app","title":"应用配置"},{"key":"lbpm","icon":"lui_icon_m_profile_navTop_lbpm","title":"流程引擎"},{"key":"portal","icon":"lui_icon_m_profile_navTop_portal","title":"门户引擎"},{"key":"notify","icon":"lui_icon_m_profile_navTop_notify","title":"统一消息中心"},{"key":"modeling","icon":"lui_icon_m_profile_navTop_modeling","title":"业务建模"},{"key":"mobile","icon":"lui_icon_m_profile_navTop_mobile","title":"移动办公"},{"key":"maintenance","icon":"lui_icon_m_profile_navTop_maintenance","title":"运维管理"},{"key":"integrate","icon":"lui_icon_m_profile_navTop_integrate","title":"集成管理"},{"key":"ftsearch","icon":"lui_icon_m_profile_navTop_ftsearch","title":"搜索功能配置"},{"key":"intelligence","icon":"lui_icon_m_profile_navTop_intelligence","title":"智能应用"}]
+</script>
+</div>
+							<div data-lui-type="lui/view/render!Javascript" style="display:none;">	
+<script type="text/config">
+{"css": "theme!profile"}
+</script>
+<script type='text/code' xsrc='/sys/profile/resource/js/render/navTop.js?s_cache=1584095152664'>
+</script>
+</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			</div>
+			<!-- 左侧导航栏 -->
+		
+			<div class="lui_profile_navLeft_container" >
+				<!-- 左侧导航栏组件 -->
+				<div id="sysProfileNavLeft" data-lui-type="sys/profile/resource/js/widget/navLeft!NavLeft" style="display:none;">	
+
+					<div data-lui-type="lui/data/source!AjaxJson" style="display:none;">	
+<script type='text/code'>
+{"url":"/sys/profile/sys_profile_main/sysCfgProfileConfig.do?method=data"}
+</script>
+</div>
+					<div data-lui-type="lui/view/render!Javascript" style="display:none;">	
+<script type="text/config">
+{"css": "theme!profile"}
+</script>
+<script type='text/code' xsrc='/sys/profile/resource/js/render/navLeft.js?s_cache=1584095152664'>
+</script>
+</div>
+				</div>
+			</div>
+			<!-- 右侧主页面 -->
+			<div class="lui_profile_moduleMain">
+				
+				<!-- 搜索定位 -->
+				<div class="lui_profile_navLeft_mask" style="display: none;"></div>
+				<div class="lui_profile_location_wrapper">
+					<div class="location_input" style="display: none;">
+						<i class="location_arrow"></i>
+						<i class="icon_cancel"></i>
+						<input type="text" placeholder="输入关键词,在下拉列表中选择内容" onkeyup="searchMenu(this.value, event);"/>
+						<div class="location_input_selection" style="display: none;max-height:200px;overflow-y:auto;">
+							<ul id="selection_menus">
+							</ul>
+						</div>
+					</div>
+				</div>
+				
+				<!-- 主业务组件 -->
+				<div id="sysProfileModuleMain" data-lui-type="sys/profile/resource/js/widget/moduleMain!ModuleMain" style="display:none;">	
+</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="/sys/profile/resource/js/profile.js?s_cache=1584095152664"></script>
+		
+		<script>
+			 
+		
+			  function itemTitleClick(topKey,subKey,subUrl){
+				  seajs.use(['lui/jquery','lui/topic'], function($ , topic) {
+					  
+					  var currentItem= $('.lui_profile_header_navTop_item[data-type="'+ topKey +'"]');
+					  
+					  var rootInner= $('.lui_profile_header_navTop_rootInner');
+					  
+					  $('.lui_profile_header_navTop_item').removeClass('current');
+						currentItem.addClass('current');
+					   
+						if(!$.contains(rootInner[0],currentItem[0])){
+							var firstNode = rootInner.children().eq(0);
+							currentItem.after(firstNode);					
+							rootInner.prepend(currentItem);
+						}
+						
+						
+					  topic.publish('sys.profile.navTop.change',{
+			 				key : topKey
+			 		  });
+					  
+					  topic.publish('sys.profile.moduleMain.change',{
+                      	key : subKey
+                  	  });
+					  
+					  
+					  topic.publish('sys.profile.navLeft.change',{
+			 				key : subKey,
+			 				url : subUrl
+			 		  });
+			      });
+			  }
+			  LUI.ready(function(){
+				  	var logHeight = $(".lui_profile_header_frame").outerHeight();
+				  	 $(".lui_porfile_header_logo_img").css("max-height", logHeight);
+				  });
+		 
+		</script>
+	
+</body>
+</html>
